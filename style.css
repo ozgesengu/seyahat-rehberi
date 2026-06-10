@@ -1,12 +1,19 @@
 /* ==========================================================================
    1. GENEL AYARLAR VE FONT (Plus Jakarta Sans)
    ========================================================================== */
+html, body {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important; /* Sağa yatay kaymayı küresel olarak tamamen yasaklar */
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: #f8fafc;
     color: #0f172a;
-    margin: 0;
-    padding: 0;
     display: flex;
     justify-content: center;
 }
@@ -391,16 +398,15 @@ header {
 .hidden { display: none !important; }
 
 /* ==========================================================================
-   7. 📱 RESPONSIVE - TÜM MOBİL TELEFONLAR İÇİN KESİN VE AGRESİF HİZALAMA KODLARI
+   7. 📱 RESPONSIVE - TÜM MOBİL TELEFONLAR İÇİN AGRESİF HİZALAMA KODLARI
    ========================================================================== */
 @media screen and (max-width: 600px) {
     /* Ana taşıyıcı kabın mobilde dışarı taşmasını engelliyoruz */
     .container {
-        padding: 10px !important;
+        padding: 8px !important;
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
-        overflow-x: hidden !important; /* Sağa kaymayı kökten yasaklar */
     }
 
     /* Tarihlerin içinde durduğu BEYAZ KART (Sorunun ana kaynağı) */
@@ -408,7 +414,7 @@ header {
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
-        padding: 12px !important; /* İç boşluğu azaltarak kutulara yer açıyoruz */
+        padding: 14px !important; /* İç boşluğu azaltarak yer kazandırıyoruz */
         margin-left: 0 !important;
         margin-right: 0 !important;
     }
@@ -418,7 +424,7 @@ header {
         display: block !important; 
         width: 100% !important;
         box-sizing: border-box !important;
-        margin-bottom: 12px !important;
+        margin-bottom: 10px !important;
     }
 
     /* Her bir tarih grubunu (Etiket + Giriş) alt alta jilet gibi diziyoruz */
@@ -426,7 +432,7 @@ header {
         display: block !important;
         width: 100% !important;
         max-width: 100% !important;
-        margin-bottom: 14px !important;
+        margin-bottom: 12px !important;
         box-sizing: border-box !important;
     }
 
@@ -437,7 +443,7 @@ header {
         max-width: 100% !important;
         min-width: 100% !important;
         box-sizing: border-box !important;
-        padding: 12px !important; /* Telefon klavyesine uygun ideal boyut */
+        padding: 10px !important; /* Mobilde daha kibar dursun diye padding'i çektik */
     }
 
     /* Hava durumu kutusunu da karta sabitliyoruz */
