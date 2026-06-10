@@ -8,7 +8,7 @@ let selectedRating = 0;
 let myMap = null; 
 let mapMarkers = []; 
 
-// Fotoğraf Slider'ı için global takip değişkenleri
+// 🔄 Fotoğraf Slider'ı için global takip değişkenleri
 let currentPhotosList = [];
 let currentPhotoIndex = 0;
 
@@ -44,13 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if(closeSpan) closeSpan.onclick = () => modal.style.display = "none";
     window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; }
 
-    // Slider Buton Event'leri
+    // 🔄 Slider Buton Event'leri
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     if (prevBtn) prevBtn.addEventListener('click', (e) => { e.stopPropagation(); navigatePhoto(-1); });
     if (nextBtn) nextBtn.addEventListener('click', (e) => { e.stopPropagation(); navigatePhoto(1); });
 
-    // Klavye Sağ/Sol Ok Tuşları ile Geçiş Desteği
+    // 🔄 Klavye Sağ/Sol Ok Tuşları ile Geçiş Desteği
     document.addEventListener('keydown', (e) => {
         if (modal.style.display === "block") {
             if (e.key === "ArrowLeft") navigatePhoto(-1);
@@ -70,6 +70,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (endDateInput) {
         endDateInput.addEventListener('change', () => {
             if (currentCityKey) updateWeather(cityData[currentCityKey].name);
+        });
+    }
+
+    // AI Chatbot için Enter tuşu dinleyicisi
+    const chatInput = document.getElementById('chat-input');
+    if (chatInput) {
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                askAi();
+            }
         });
     }
 });
@@ -223,6 +234,7 @@ function renderGallery() {
     gallery.innerHTML = "";
     const userPhotos = JSON.parse(localStorage.getItem('user_photos_final_v2')) || {};
     
+    // Global listeyi güncelliyoruz
     currentPhotosList = userPhotos[currentPlaceKey] || [];
     
     if (currentPhotosList.length === 0) {
@@ -231,12 +243,13 @@ function renderGallery() {
         currentPhotosList.forEach((src, index) => {
             const img = document.createElement('img');
             img.src = src;
-            img.onclick = () => openModal(index); 
+            img.onclick = () => openModal(index); // Açarken artık indeks gönderiyoruz
             gallery.appendChild(img);
         });
     }
 }
 
+// 🔄 Güncellenen Modal Açma Fonksiyonu
 function openModal(index) {
     const modal = document.getElementById("imageModal");
     const modalImg = document.getElementById("imgFull");
@@ -245,16 +258,19 @@ function openModal(index) {
     modal.style.display = "block";
     modalImg.src = currentPhotosList[currentPhotoIndex];
     
+    // Tek bir fotoğraf varsa yön oklarını gizleyebiliriz
     const displayStyle = currentPhotosList.length > 1 ? "block" : "none";
     document.getElementById('prevBtn').style.display = displayStyle;
     document.getElementById('nextBtn').style.display = displayStyle;
 }
 
+// 🔄 Fotoğraflar Arasında Gezinmeyi Sağlayan Fonksiyon
 function navigatePhoto(direction) {
     if (currentPhotosList.length <= 1) return;
     
     currentPhotoIndex += direction;
     
+    // Başa veya sona gelindiğinde döngüsel geçiş sağlama (sonsuz döngü)
     if (currentPhotoIndex < 0) {
         currentPhotoIndex = currentPhotosList.length - 1;
     } else if (currentPhotoIndex >= currentPhotosList.length) {
@@ -264,50 +280,16 @@ function navigatePhoto(direction) {
     document.getElementById("imgFull").src = currentPhotosList[currentPhotoIndex];
 }
 
-// ➔ 🛠️ YENİ EKLENEN GÖRSEL SIKIŞTIRMA VE BOYUTLANDIRMA ALGORİTMASI
 function handleFileUpload(event) {
     const file = event.target.files[0];
     if (!file || !currentPlaceKey) return;
-
     const reader = new FileReader();
     reader.onload = function(e) {
-        const img = new Image();
-        img.src = e.target.result;
-        
-        img.onload = function() {
-            // HTML5 Canvas yaratarak resmi sanal ortamda yeniden çizeceğiz
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Maksimum genişlik sınırı (Örn: 800px mobil için fazlasıyla yeterli ve çok hafiftir)
-            const MAX_WIDTH = 800;
-            let width = img.width;
-            let height = img.height;
-            
-            // Fotoğrafın en-boy oranını bozmadan küçültme hesabı
-            if (width > MAX_WIDTH) {
-                height *= MAX_WIDTH / width;
-                width = MAX_WIDTH;
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            
-            // Resmi canvas üzerine yeni boyutlarıyla basıyoruz
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            // Canvas üzerindeki resmi kalitesini %70'e düşürerek Base64 formatına çeviriyoruz
-            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-            
-            // Küçültülmüş veriyi LocalStorage'a güvenle kaydediyoruz
-            let userPhotos = JSON.parse(localStorage.getItem('user_photos_final_v2')) || {};
-            if (!userPhotos[currentPlaceKey]) userPhotos[currentPlaceKey] = [];
-            
-            userPhotos[currentPlaceKey].push(compressedBase64);
-            localStorage.setItem('user_photos_final_v2', JSON.stringify(userPhotos));
-            
-            renderGallery();
-        };
+        let userPhotos = JSON.parse(localStorage.getItem('user_photos_final_v2')) || {};
+        if (!userPhotos[currentPlaceKey]) userPhotos[currentPlaceKey] = [];
+        userPhotos[currentPlaceKey].push(e.target.result);
+        localStorage.setItem('user_photos_final_v2', JSON.stringify(userPhotos));
+        renderGallery();
     };
     reader.readAsDataURL(file);
 }
@@ -360,3 +342,150 @@ function loadComments() {
             <p style="margin:0; color:#334155; font-size:14px; line-height:1.5;">${c.msg}</p>
         `;
         list.appendChild(div);
+    });
+}
+
+function updateWeather(city) {
+    const weatherBox = document.getElementById('weather-box');
+    const startDateVal = document.getElementById('startDate').value;
+    const endDateVal = document.getElementById('endDate').value;
+
+    if (!startDateVal || !endDateVal) {
+        weatherBox.innerHTML = `⚠️ <strong>${city}</strong> seyahat planı hava durumu tahmini için lütfen yukarıdan gidiş ve dönüş tarihlerini seçin!`;
+        return;
+    }
+
+    const start = new Date(startDateVal);
+    const end = new Date(endDateVal);
+
+    if (end < start) {
+        weatherBox.innerHTML = `❌ Dönüş tarihi, gidiş tarihinden önce olamaz!`;
+        return;
+    }
+
+    const timeDiff = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+
+    if (diffDays > 7) {
+        weatherBox.innerHTML = `⚠️ En fazla 7 günlük hava durumu tahmini listelenebilir. (Seçilen: ${diffDays} gün)`;
+        return;
+    }
+
+    const weatherConditions = [
+        { text: "Güneşli", emoji: "☀️", temp: [24, 30] },
+        { text: "Parçalı Bulutlu", emoji: "🌤️", temp: [20, 25] },
+        { text: "Bulutlu", emoji: "☁️", temp: [17, 21] },
+        { text: "Hafif Yağmurlu", emoji: "🌦️", temp: [15, 19] },
+        { text: "Sağanak Yağmurlu", emoji: "🌧️", temp: [12, 16] }
+    ];
+
+    let htmlContent = `<h3 style="margin-top:0;">🌤️ ${city} Gezi Planı Hava Tahmini (${diffDays} Günlük)</h3>`;
+    htmlContent += `<div class="weather-forecast-container">`;
+
+    let currentDate = new Date(start);
+    for (let i = 0; i < diffDays; i++) {
+        const dateString = currentDate.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+        const seed = (city.length + currentDate.getDate() + currentDate.getMonth()) % weatherConditions.length;
+        const condition = weatherConditions[seed];
+        const randomTemp = Math.floor(Math.random() * (condition.temp[1] - condition.temp[0] + 1)) + condition.temp[0];
+
+        htmlContent += `
+            <div class="weather-card">
+                <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">${dateString}</div>
+                <div style="font-size: 24px; margin: 4px 0;">${condition.emoji}</div>
+                <div style="font-size: 15px; font-weight: 700; color: #0f172a;">${randomTemp}°C</div>
+                <div style="font-size: 11px; font-weight: 600; color: #475569; margin-top: 4px;">${condition.text}</div>
+            </div>
+        `;
+
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    htmlContent += `</div>`;
+    weatherBox.innerHTML = htmlContent;
+}
+
+// 🤖 CHAT KUTUSUNU AÇIP KAPATAN FONKSİYON (YENİ EKLENDİ)
+function toggleChat() {
+    const chatContainer = document.getElementById("ai-chat-container");
+    const chatBtn = document.getElementById("ai-chat-btn");
+    
+    if (!chatContainer || !chatBtn) return;
+
+    if (chatContainer.style.display === "none" || chatContainer.style.display === "") {
+        chatContainer.style.display = "block";
+        chatBtn.style.transform = "scale(0.9)";
+        chatBtn.innerHTML = "❌"; // Kutu açılınca buton çarpı simgesine dönüşür
+    } else {
+        chatContainer.style.display = "none";
+        chatBtn.style.transform = "scale(1)";
+        chatBtn.innerHTML = "🤖"; // Kapanınca tekrar robota dönüşür
+    }
+}
+
+// 🤖 YAPAY ZEKA GURME ASİSTANI ANA FONKSİYONU (YENİ EKLENDİ)
+function askAi() {
+    const inputElement = document.getElementById("chat-input");
+    const messagesContainer = document.getElementById("chat-messages");
+    
+    if (!inputElement || !messagesContainer) return;
+
+    const userMessage = inputElement.value.trim().toLowerCase();
+
+    if (!userMessage) return;
+
+    // Kullanıcının yazdığı mesajı sağa yaslı olarak chat kutusuna ekle
+    messagesContainer.innerHTML += `
+        <div style="margin-bottom: 12px; text-align: right;">
+            <span style="background: #3b82f6; color: white; padding: 8px 12px; border-radius: 8px; display: inline-block; max-width: 80%; text-align: left; font-size: 13px;">
+                <b>Sen:</b> ${inputElement.value}
+            </span>
+        </div>
+    `;
+
+    inputElement.value = "";
+    inputElement.focus();
+
+    let responseFound = false;
+
+    // data.js dosyasından gelen 'cityData' objesini tarıyoruz
+    if (typeof cityData !== 'undefined') {
+        for (let city in cityData) {
+            if (userMessage.includes(city) || cityData[city].name.toLowerCase().includes(userMessage)) {
+                const cityInfo = cityData[city];
+                
+                let foodTitle = (cityInfo.food && cityInfo.food[0]) ? cityInfo.food[0].title : "Önerilen yerel lezzet kaydı bulunamadı.";
+                let cafeTitle = (cityInfo.cafe && cityInfo.cafe[0]) ? cityInfo.cafe[0].title : "Önerilen kafe kaydı bulunamadı.";
+                
+                let aiReply = `🤖 <b>${cityInfo.name}</b> seyahatiniz için yaptığım analize göre en popüler gurme noktaları şunlar:<br><br>` +
+                              `🍴 <b>Önerilen En İyi Restoran:</b> ${foodTitle}<br>` +
+                              `☕ <b>En Yakın / Popüler Kafe:</b> ${cafeTitle}<br><br>` +
+                              `📍 <b>Küçük Bir Keşif İpucu:</b> Bu şehre gittiğinizde şu bölgeyi de rotanıza eklemeyi unutmayın: <i>${cityInfo.desc}</i>`;
+                
+                messagesContainer.innerHTML += `
+                    <div style="margin-bottom: 12px; text-align: left;">
+                        <span style="background: #fff; color: #333; padding: 10px 14px; border-radius: 8px; display: inline-block; max-width: 85%; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 13px;">
+                            ${aiReply}
+                        </span>
+                    </div>
+                `;
+                responseFound = true;
+                break;
+            }
+        }
+    }
+
+    // Şehir bulunamadıysa verilecek genel cevap
+    if (!responseFound) {
+        messagesContainer.innerHTML += `
+            <div style="margin-bottom: 12px; text-align: left;">
+                <span style="background: #fff; color: #333; padding: 10px 14px; border-radius: 8px; display: inline-block; max-width: 85%; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 13px;">
+                    🤖 Aradığınız şehre ait gurme verilerini veri tabanımız üzerinden filtreliyorum. Şu an sistemde aktif olan diğer şehirleri (Örn: <b>Batman, Yalova, Karabük, Şırnak</b>) sormayı deneyebilirsiniz.
+                </span>
+            </div>
+        `;
+    }
+
+    // Scroll'u aşağı kaydır
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
