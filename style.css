@@ -391,10 +391,29 @@ header {
 .hidden { display: none !important; }
 
 /* ==========================================================================
-   7. 📱 RESPONSIVE - TÜM MOBİL TELEFONLAR İÇİN KESİN HİZALAMA KODLARI
+   7. 📱 RESPONSIVE - TÜM MOBİL TELEFONLAR İÇİN KESİN VE AGRESİF HİZALAMA KODLARI
    ========================================================================== */
 @media screen and (max-width: 600px) {
-    /* Tarih kapsayıcısını yan yana düzen yerine kesin olarak alt alta düzene zorluyoruz */
+    /* Ana taşıyıcı kabın mobilde dışarı taşmasını engelliyoruz */
+    .container {
+        padding: 10px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important; /* Sağa kaymayı kökten yasaklar */
+    }
+
+    /* Tarihlerin içinde durduğu BEYAZ KART (Sorunun ana kaynağı) */
+    .planning-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 12px !important; /* İç boşluğu azaltarak kutulara yer açıyoruz */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    /* Tarih kapsayıcısını tamamen dikey bloka çeviriyoruz */
     .date-inputs {
         display: block !important; 
         width: 100% !important;
@@ -402,40 +421,37 @@ header {
         margin-bottom: 12px !important;
     }
 
-    /* Her bir tarih grubunu (Etiket + Input) alt alta blok elemente çeviriyoruz */
+    /* Her bir tarih grubunu (Etiket + Giriş) alt alta jilet gibi diziyoruz */
     .date-group {
         display: block !important;
         width: 100% !important;
-        margin-bottom: 14px !important; /* Aralarına dikey boşluk bırakır */
+        max-width: 100% !important;
+        margin-bottom: 14px !important;
         box-sizing: border-box !important;
     }
 
-    /* Tarih kutularının kendisini ekrana %100 jilet gibi yayıyoruz ve taşmayı kırıyoruz */
+    /* Tarih input kutularının kendisi (Zorla kartın içine sığdırıyoruz) */
     .date-group input[type="date"] {
         display: block !important;
         width: 100% !important;
         max-width: 100% !important;
         min-width: 100% !important;
         box-sizing: border-box !important;
-    }
-    
-    /* Ana beyaz kutunun da mobilde dışarı taşmasını önlüyoruz */
-    .planning-box {
-        width: 100% !important;
-        box-sizing: border-box !important;
-        padding: 16px !important;
+        padding: 12px !important; /* Telefon klavyesine uygun ideal boyut */
     }
 
+    /* Hava durumu kutusunu da karta sabitliyoruz */
     #weather-box {
         width: 100% !important;
+        max-width: 100% !important;
         box-sizing: border-box !important;
     }
 
-    /* Yapay zeka chat penceresini telefona göre küçültür */
+    /* Yapay zeka chat penceresini telefona göre optimize et */
     #ai-chat-container {
-        width: 290px !important;
-        right: 15px !important;
-        bottom: 85px !important;
+        width: 280px !important;
+        right: 10px !important;
+        bottom: 80px !important;
     }
 
     .brand-section h1 {
