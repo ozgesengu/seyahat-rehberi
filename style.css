@@ -1,13 +1,21 @@
 /* ==========================================================================
-   1. GENEL AYARLAR VE FONT (Plus Jakarta Sans)
+   1. TARAYICI SIFIRLAMA VE KÜRESEL KİLİTLEME (Masaüstü ve Mobil)
    ========================================================================== */
+* {
+    box-sizing: border-box !important;
+    -webkit-box-sizing: border-box !important; /* Safari için zorunlu */
+    -moz-box-sizing: border-box !important;
+    margin: 0;
+    padding: 0;
+}
+
 html, body {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    overflow-x: hidden !important; /* Sağa yatay kaymayı küresel olarak tamamen yasaklar */
-    box-sizing: border-box;
+    overflow-x: hidden !important; /* Sağa yatay kaymayı küresel olarak kilitler */
+    position: relative;
 }
 
 body {
@@ -18,11 +26,13 @@ body {
     justify-content: center;
 }
 
+/* ==========================================================================
+   2. ANA KONTEYNER VE KART YAPILARI
+   ========================================================================== */
 .container {
     width: 100%;
     max-width: 800px;
     padding: 20px;
-    box-sizing: border-box;
 }
 
 header {
@@ -32,7 +42,7 @@ header {
 
 .brand-section h1 {
     font-size: 2.5rem;
-    color: #6366f1; /* Şık Mor/Mavi Tonu */
+    color: #6366f1;
     margin-bottom: 5px;
 }
 
@@ -42,27 +52,13 @@ header {
     margin-top: 0;
 }
 
-/* ==========================================================================
-   2. KART YAPILARI VE INPUT ALANLARI
-   ========================================================================== */
-.card {
+.card, .planning-box {
     background: #ffffff;
     border-radius: 24px;
     padding: 24px;
     margin-bottom: 24px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    box-sizing: border-box;
-    width: 100%;
-}
-
-.planning-box {
-    background: #ffffff;
-    border-radius: 24px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-    width: 100%;
-    box-sizing: border-box;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    width: 100% !important;
 }
 
 .search-wrapper {
@@ -78,7 +74,6 @@ header {
     font-family: inherit;
     font-size: 1rem;
     outline: none;
-    box-sizing: border-box;
     transition: border-color 0.2s;
 }
 
@@ -101,13 +96,11 @@ header {
     overflow-y: auto;
     z-index: 1000;
     display: none;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
 #cityList li {
     padding: 12px 20px;
     cursor: pointer;
-    font-weight: 500;
 }
 
 #cityList li:hover {
@@ -115,7 +108,7 @@ header {
 }
 
 /* ==========================================================================
-   3. TARİH GİRDİLERİ (DATE INPUTS) YERLEŞİMİ (MASAÜSTÜ)
+   3. TARİH ALANLARI (MASAÜSTÜ DÜZENİ)
    ========================================================================== */
 .date-inputs {
     display: flex;
@@ -123,7 +116,6 @@ header {
     gap: 16px;
     margin-bottom: 16px;
     width: 100%;
-    box-sizing: border-box;
 }
 
 .date-group {
@@ -151,7 +143,6 @@ header {
     color: #334155;
     font-weight: 600;
     width: 100%;
-    box-sizing: border-box;
 }
 
 #weather-box {
@@ -166,7 +157,7 @@ header {
 }
 
 /* ==========================================================================
-   4. HAVA DURUMU KARTLARI VE HARİTA
+   4. DİĞER BİLEŞENLER (HARİTA, GALERİ, YORUMLAR)
    ========================================================================== */
 .weather-forecast-container {
     display: flex;
@@ -182,7 +173,6 @@ header {
     min-width: 80px;
     text-align: center;
     border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 #map {
@@ -193,9 +183,6 @@ header {
     z-index: 1;
 }
 
-/* ==========================================================================
-   5. FİLTRE BUTONLARI VE LİSTELER
-   ========================================================================== */
 .filter-buttons {
     display: flex;
     gap: 8px;
@@ -211,7 +198,6 @@ header {
     font-weight: 600;
     cursor: pointer;
     font-size: 0.9rem;
-    transition: all 0.2s;
 }
 
 .filter-buttons button.active-cat {
@@ -222,8 +208,6 @@ header {
 
 #dynamicList {
     list-style: none;
-    padding: 0;
-    margin: 0;
 }
 
 #dynamicList li {
@@ -232,10 +216,6 @@ header {
     align-items: center;
     padding: 14px 0;
     border-bottom: 1px solid #f1f5f9;
-}
-
-#dynamicList li:last-child {
-    border-bottom: none;
 }
 
 .place-info-block {
@@ -258,18 +238,12 @@ header {
     font-family: inherit;
     font-size: 0.85rem;
     font-weight: 600;
-    cursor: pointer;
     text-decoration: none;
-    display: inline-block;
-    margin-left: 5px;
 }
 
 .action-buttons button { background: #f1f5f9; color: #334155; }
 .action-buttons a { background: #10b981; color: white; }
 
-/* ==========================================================================
-   6. YORUMLAR, GALERİ VE MODAL TASARIMI
-   ========================================================================== */
 .gallery-container {
     display: flex;
     gap: 10px;
@@ -281,11 +255,6 @@ header {
     height: 100px;
     border-radius: 8px;
     cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.gallery-container img:hover {
-    transform: scale(1.05);
 }
 
 .upload-btn {
@@ -297,36 +266,19 @@ header {
     font-weight: 600;
     cursor: pointer;
     margin-top: 10px;
-    font-size: 0.9rem;
 }
 
-#starRating {
-    margin-bottom: 15px;
-}
+#starRating { margin-bottom: 15px; }
+.star { font-size: 24px; color: #cbd5e1; cursor: pointer; }
+.star.active { color: #eab308; }
 
-.star {
-    font-size: 24px;
-    color: #cbd5e1;
-    cursor: pointer;
-}
-
-.star.active {
-    color: #eab308;
-}
-
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
+.input-group { display: flex; flex-direction: column; gap: 12px; }
 .input-group input, .input-group textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
     font-family: inherit;
-    box-sizing: border-box;
 }
 
 #submitBtn {
@@ -351,109 +303,87 @@ header {
     display: none;
     position: fixed;
     z-index: 10000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    left: 0; top: 0; width: 100%; height: 100%;
     background-color: rgba(0,0,0,0.9);
 }
 
 .modal-content {
-    margin: auto;
-    display: block;
-    max-width: 80%;
-    max-height: 80%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    margin: auto; display: block;
+    max-width: 80%; max-height: 80%;
+    position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
 }
 
 .close {
-    position: absolute;
-    top: 15px;
-    right: 35px;
-    color: #f1f1f1;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
+    position: absolute; top: 15px; right: 35px;
+    color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;
 }
 
 .modal-nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255,255,255,0.2);
-    color: white;
-    border: none;
-    padding: 16px;
-    font-size: 24px;
-    cursor: pointer;
-    border-radius: 50%;
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,0.2); color: white; border: none;
+    padding: 16px; font-size: 24px; cursor: pointer; border-radius: 50%;
 }
 
 #prevBtn { left: 20px; }
 #nextBtn { right: 20px; }
-
 .hidden { display: none !important; }
 
 /* ==========================================================================
-   7. 📱 RESPONSIVE - TÜM MOBİL TELEFONLAR İÇİN AGRESİF HİZALAMA KODLARI
+   5. 📱 %100 MOBİL UYUMLULUK VE AGRESİF TAŞMA KİLİDİ
    ========================================================================== */
 @media screen and (max-width: 600px) {
-    /* Ana taşıyıcı kabın mobilde dışarı taşmasını engelliyoruz */
+    /* Ekranın dışına taşan her şeyi gizle */
     .container {
-        padding: 8px !important;
+        padding: 10px !important;
         width: 100% !important;
         max-width: 100% !important;
-        box-sizing: border-box !important;
+        overflow-x: hidden !important;
     }
 
-    /* Tarihlerin içinde durduğu BEYAZ KART (Sorunun ana kaynağı) */
+    /* Beyaz kutunun genişliğini sabitle ve padding'ini daralt */
     .planning-box {
         width: 100% !important;
         max-width: 100% !important;
-        box-sizing: border-box !important;
-        padding: 14px !important; /* İç boşluğu azaltarak yer kazandırıyoruz */
+        padding: 16px !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
     }
 
-    /* Tarih kapsayıcısını tamamen dikey bloka çeviriyoruz */
+    /* Tarih alanlarını kesin olarak alt alta sıralamaya zorla */
     .date-inputs {
         display: block !important; 
         width: 100% !important;
-        box-sizing: border-box !important;
-        margin-bottom: 10px !important;
+        margin-bottom: 0 !important;
     }
 
-    /* Her bir tarih grubunu (Etiket + Giriş) alt alta jilet gibi diziyoruz */
+    /* Etiket ve kutuyu dikey blok yap */
     .date-group {
         display: block !important;
         width: 100% !important;
         max-width: 100% !important;
-        margin-bottom: 12px !important;
-        box-sizing: border-box !important;
+        margin-bottom: 15px !important;
     }
 
-    /* Tarih input kutularının kendisi (Zorla kartın içine sığdırıyoruz) */
+    /* TARAYICILARIN KUTUYU BÜYÜTMESİNİ ENGELLİYORUZ (KRİTİK ÇÖZÜM) */
     .date-group input[type="date"] {
         display: block !important;
         width: 100% !important;
         max-width: 100% !important;
         min-width: 100% !important;
-        box-sizing: border-box !important;
-        padding: 10px !important; /* Mobilde daha kibar dursun diye padding'i çektik */
+        padding: 10px !important;
+        font-size: 14px !important;
+        border-radius: 12px !important;
+        /* Aşağıdaki iki satır tarayıcının kutunun üstüne ekstra boşluk eklemesini engeller */
+        margin: 0 !important; 
+        line-height: normal !important; 
     }
 
-    /* Hava durumu kutusunu da karta sabitliyoruz */
     #weather-box {
         width: 100% !important;
         max-width: 100% !important;
-        box-sizing: border-box !important;
     }
 
-    /* Yapay zeka chat penceresini telefona göre optimize et */
     #ai-chat-container {
         width: 280px !important;
         right: 10px !important;
