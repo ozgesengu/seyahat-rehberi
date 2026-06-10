@@ -1,136 +1,33 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gezgin Rehberi - Türkiye Gezi Rehberi</title>
-    <!-- Google Fonts Entegrasyonu -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<button onclick="toggleChat()" id="ai-chat-btn" style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #3b82f6; color: white; border: none; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 24px; cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;">
+        🤖
+    </button>
 
-    <div class="container">
-        <header>
-            <div class="brand-section">
-                <h1>📍 Gezgin Rehberi</h1>
-                <p class="brand-subtitle">Türkiye'yi Keşfetmenin En Akıllı Yolu</p>
+    <div id="ai-chat-container" style="position: fixed; bottom: 90px; right: 20px; width: 330px; background: white; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); font-family: 'Plus Jakarta Sans', sans-serif; z-index: 9999; overflow: hidden; border-top: 4px solid #3b82f6; display: none; transition: all 0.3s ease;">
+        <div style="background: #ffffff; color: #0f172a; padding: 14px 16px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; font-size: 14px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 18px;">🤖</span> Gezi & Gurme Asistanı
             </div>
-            
-            <!-- Tarih Seçim Alanı ve Hava Durumu Kutusu Bir Arada -->
-            <div class="planning-box">
-                <div class="date-inputs">
-                    <div class="date-group">
-                        <label for="startDate">📅 Gidiş Tarihi</label>
-                        <input type="date" id="startDate">
-                    </div>
-                    <div class="date-group">
-                        <label for="endDate">📅 Dönüş Tarihi</label>
-                        <input type="date" id="endDate">
-                    </div>
-                </div>
-                <div id="weather-box">Keşfetmek için tarih seçin and bir şehir arayın...</div>
-            </div>
-            
-            <div class="search-wrapper">
-                <input type="text" id="cityInput" placeholder="Gitmek istediğiniz şehri yazın..." autocomplete="off">
-                <ul id="cityList"></ul>
-            </div>
-        </header>
-
-        <main id="cityContent" class="hidden">
-            <div class="card main-info animate-fade-in">
-                <h2 id="cityName">Şehir Adı</h2>
-                <p id="cityDesc">Şehir açıklaması</p>
-            </div>
-
-            <div class="card animate-fade-in">
-                <h3>🗺️ Mekanların Harita Üzerindeki Konumları</h3>
-                <div id="map"></div>
-            </div>
-
-            <div class="card animate-fade-in">
-                <h3>🔍 Keşfedilecek Yerler</h3>
-                <div class="filter-buttons">
-                    <button data-cat="history" class="active-cat">🏛️ Tarihi Yerler</button>
-                    <button data-cat="food">🍽️ Lokantalar</button>
-                    <button data-cat="cafe">☕ Kafeler</button>
-                    <button data-cat="all">🌟 Hepsini Gör</button>
-                </div>
-            </div>
-
-            <div class="card results-card animate-fade-in">
-                <ul id="dynamicList"></ul>
-            </div>
-
-            <div id="placeDetailSection" class="hidden">
-                <div class="card place-detail-card animate-fade-in">
-                    <h3 id="targetPlaceName">Seçilen Mekan</h3>
-                    
-                    <h4>📸 Mekan Fotoğrafları</h4>
-                    <div id="cityGallery" class="gallery-container"></div>
-
-                    <div class="upload-section">
-                        <label for="imageUpload" class="upload-btn">✨ Bu Mekana Fotoğraf Ekle</label>
-                        <input type="file" id="imageUpload" accept="image/*" style="display:none;">
-                    </div>
-                </div>
-
-                <section class="comment-card animate-fade-in">
-                    <h3>💬 Mekan Yorumları ve Puanlama</h3>
-                    <div id="starRating">
-                        <span class="star" data-value="1">★</span>
-                        <span class="star" data-value="2">★</span>
-                        <span class="star" data-value="3">★</span>
-                        <span class="star" data-value="4">★</span>
-                        <span class="star" data-value="5">★</span>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="userName" placeholder="Adınız">
-                        <textarea id="userComment" rows="4" placeholder="Bu mekan hakkındaki deneyimlerinizi paylaşın..."></textarea>
-                        <button id="submitBtn">Yorumu Gönder</button>
-                    </div>
-                    <div id="commentsList"></div>
-                </section>
-            </div>
-        </main>
-    </div>
-
-    <!-- 🔄 Güncellenen İleri/Geri Ok Butonlu Fotoğraf Modalı -->
-    <div id="imageModal" class="modal">
-        <span class="close">×</span>
-        <button id="prevBtn" class="modal-nav-btn">❮</button>
-        <img class="modal-content" id="imgFull">
-        <button id="nextBtn" class="modal-nav-btn">❯</button>
-    </div>
-
-    <!-- 🤖 YAPAY ZEKA CHAT KUTUSU -->
-    <div id="ai-chat-container" style="position: fixed; bottom: 20px; right: 20px; width: 330px; background: white; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); font-family: 'Plus Jakarta Sans', sans-serif; z-index: 9999; overflow: hidden; border-top: 4px solid #3b82f6;">
-        <!-- Chat Başlığı -->
-        <div style="background: #ffffff; color: #0f172a; padding: 14px 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; font-size: 14px;">
-            <span style="font-size: 18px;">🤖</span> Gezi & Gurme Asistanı
+            <button onclick="toggleChat()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #94a3b8;">×</button>
         </div>
         
-        <!-- Mesaj Penceresi -->
         <div id="chat-messages" style="height: 240px; overflow-y: auto; padding: 16px; font-size: 13px; color: #334155; line-height: 1.6; background: #f8fafc;">
             <p style="margin: 0 0 12px 0; background: #ffffff; padding: 10px 14px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.02); font-weight: 500;">
                 Merhaba! Gezi planınız için merak ettiğiniz şehri yazın, size oradaki en popüler restoranları ve gurme lezzetleri anında listeleyeyim.
             </p>
         </div>
         
-        <!-- Giriş ve Gönderme Alanı -->
         <div style="display: flex; border-top: 1px solid #e2e8f0; background: white; padding: 6px;">
             <input type="text" id="chat-input" placeholder="Şehir sorun... (Örn: Batman)" style="flex: 1; padding: 10px 12px; border: none; outline: none; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif;">
-            <button onclick="askAi()" style="background: #3b82f6; color: white; border: none; padding: 0 16px; font-weight: 600; border-radius: 10px; cursor: pointer; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif; transition: background 0.2s;">Gönder</button>
+            <button onclick="askAi()" style="background: #3b82f6; color: white; border: none; padding: 0 16px; font-weight: 600; border-radius: 10px; cursor: pointer; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif;">Gönder</button>
         </div>
     </div>
 
-    <!-- Kütüphaneler ve Scriptler -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="data.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+    <style>
+        @media (max-width: 600px) {
+            #ai-chat-container {
+                width: 290px !important;
+                right: 15px !important;
+                bottom: 85px !important;
+            }
+        }
+    </style>
