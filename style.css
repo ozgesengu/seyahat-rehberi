@@ -108,7 +108,7 @@ header {
 }
 
 /* ==========================================================================
-   3. TARİH GİRDİLERİ (DATE INPUTS) YERLEŞİMİ
+   3. TARİH GİRDİLERİ (DATE INPUTS) YERLEŞİMİ (MASAÜSTÜ)
    ========================================================================== */
 .date-inputs {
     display: flex;
@@ -391,29 +391,44 @@ header {
 .hidden { display: none !important; }
 
 /* ==========================================================================
-   7. 📱 RESPONSIVE (MOBİL UYUMLULUK) AYARLARI
+   7. 📱 RESPONSIVE - TÜM MOBİL TELEFONLAR İÇİN KESİN HİZALAMA KODLARI
    ========================================================================== */
-@media (max-width: 600px) {
-    /* Tarih seçim kutularını alt alta alarak taşmayı önler */
+@media screen and (max-width: 600px) {
+    /* Tarih kapsayıcısını yan yana düzen yerine kesin olarak alt alta düzene zorluyoruz */
     .date-inputs {
-        flex-direction: column;
-        gap: 12px;
+        display: block !important; 
         width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 12px !important;
     }
 
+    /* Her bir tarih grubunu (Etiket + Input) alt alta blok elemente çeviriyoruz */
     .date-group {
+        display: block !important;
         width: 100% !important;
+        margin-bottom: 14px !important; /* Aralarına dikey boşluk bırakır */
+        box-sizing: border-box !important;
     }
 
+    /* Tarih kutularının kendisini ekrana %100 jilet gibi yayıyoruz ve taşmayı kırıyoruz */
     .date-group input[type="date"] {
+        display: block !important;
         width: 100% !important;
-        box-sizing: border-box;
+        max-width: 100% !important;
+        min-width: 100% !important;
+        box-sizing: border-box !important;
     }
     
+    /* Ana beyaz kutunun da mobilde dışarı taşmasını önlüyoruz */
     .planning-box {
         width: 100% !important;
-        box-sizing: border-box;
-        padding: 16px;
+        box-sizing: border-box !important;
+        padding: 16px !important;
+    }
+
+    #weather-box {
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     /* Yapay zeka chat penceresini telefona göre küçültür */
