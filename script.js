@@ -319,7 +319,6 @@ function addComment() {
     loadComments();
 }
 
-// Hava Tahmini ve Yorumları Yükleme Fonksiyonları Aynen Korunmuştur
 function loadComments() {
     const comments = JSON.parse(localStorage.getItem('comments_final_v2')) || {};
     const list = document.getElementById('commentsList');
@@ -406,7 +405,25 @@ function updateWeather(city) {
     weatherBox.innerHTML = htmlContent;
 }
 
-// 🤖 YAPAY ZEKA GURME ASİSTANI ANA FONKSİYONU
+// 🤖 CHAT KUTUSUNU AÇIP KAPATAN FONKSİYON (YENİ EKLENDİ)
+function toggleChat() {
+    const chatContainer = document.getElementById("ai-chat-container");
+    const chatBtn = document.getElementById("ai-chat-btn");
+    
+    if (!chatContainer || !chatBtn) return;
+
+    if (chatContainer.style.display === "none" || chatContainer.style.display === "") {
+        chatContainer.style.display = "block";
+        chatBtn.style.transform = "scale(0.9)";
+        chatBtn.innerHTML = "❌"; // Kutu açılınca buton çarpı simgesine dönüşür
+    } else {
+        chatContainer.style.display = "none";
+        chatBtn.style.transform = "scale(1)";
+        chatBtn.innerHTML = "🤖"; // Kapanınca tekrar robota dönüşür
+    }
+}
+
+// 🤖 YAPAY ZEKA GURME ASİSTANI ANA FONKSİYONU (YENİ EKLENDİ)
 function askAi() {
     const inputElement = document.getElementById("chat-input");
     const messagesContainer = document.getElementById("chat-messages");
